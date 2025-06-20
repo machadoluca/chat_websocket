@@ -9,11 +9,11 @@ class RoomController {
   private readonly repository = DataSource.getRepository(Room);
 
   public list: RequestHandler = async (request, response) => {
-    const openRooms = this.repository.find();
+    const rooms = await this.repository.find();
 
     response.send({
       message: 'Sucesso',
-      data: openRooms
+      data: rooms
     });
   };
 
@@ -46,12 +46,22 @@ class RoomController {
     });
   };
 
-  public enter: RequestHandler = async (request, response) => {
+  public join: RequestHandler = async (request, response) => {
     const { id } = request.params;
+
+    const room = await this.repository.findOne({ where: { id }})
+
+    if(!room) throw new HttpResponse(400, 'Sala não encontrada', null);
+
+    if(RoomManager.getRoomSize(room.id) === room.userLimit) {
+      throw new HttpResponse(400, 'Sala cheia', null);
+    }
 
     response.send({
       message: 'Sucesso',
-      data: id
+      data: {
+        roomId: room.id
+      }
     });
   };
 }

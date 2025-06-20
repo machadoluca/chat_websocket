@@ -3,9 +3,9 @@ import RoomManager from "../domain/RoomManager";
 
 interface IWebSocketMessage {
   requestType: string
-  message: string
-  hostId?: string
-  roomId?: string
+  roomId: string
+  userName: string;
+  data?: any
 }
 
 const Wss = new WebSocketServer({ noServer: true });
@@ -19,22 +19,25 @@ Wss.on('connection', ws => {
 
     if (parseMessage.requestType == 'enter_room') {
       RoomManager.addClient(parseMessage.roomId, ws)
+      return;
     }
     
     if (parseMessage.requestType == 'leave_room') {
       RoomManager.removeClient(parseMessage.roomId, ws)
-      ws.close()
+      ws.close();
+      return;
     }
-
-    console.log('Receive message:', parseMessage);
     
-    
-    // ws.send(`Eco:${message.toString()}`);
-    // Wss.clients.forEach(client => {
-    //   if (client !== ws && client.readyState === client.OPEN) {
-    //     client.send(`Message to another client: ${message}`);
-    //   }
-    // });
+    if (parseMessage.requestType == 'message') {
+      const users = RoomManager.getRoomUsers(parseMessage.roomId);
+      
+      for (const user of users) {
+        if (user !== ws && user.readyState === user.OPEN) {
+          user.send(`Message from ${parseMessage.userName}: ${parseMessage.data}`);
+        }
+      }
+      return;
+    }
   });
 
   ws.send('👋 Bem-vindo ao servidor WebSocket!');
