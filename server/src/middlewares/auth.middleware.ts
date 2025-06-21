@@ -17,7 +17,8 @@ export const authHandler: RequestHandler = (request, response, next) => {
   try {
     const isValid = jwt.verify(token, process.env.SECRET_KEY);
     if (isValid) next();
-  } catch (error: any) {
+  } 
+  catch (error: any) {
     throw new HttpErrorResponse(403, 'Token expirado', null);
   }
 
