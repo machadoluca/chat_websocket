@@ -2,7 +2,7 @@ import { RequestHandler } from 'express';
 import { z } from 'zod';
 import { compare, hash } from 'bcrypt';
 import { DataSource } from '../database/connection';
-import { HttpResponse } from '../utils/HttpResponse';
+import { HttpErrorResponse } from '../utils/HttpErrorResponse';
 import User from '../domain/entities/User';
 import jwt from 'jsonwebtoken';
 
@@ -19,7 +19,7 @@ class UserController {
     const result = userSchema.safeParse(request.body);
 
     if (!result.success) {
-      throw new HttpResponse(400, "Dados inválidos", result.error);
+      throw new HttpErrorResponse(400, "Dados inválidos", result.error);
     }
 
     const { name, password, email }: z.infer<typeof userSchema> = request.body;
@@ -44,7 +44,7 @@ class UserController {
     const result = userSchema.safeParse(request.body);
 
     if (!result.success) {
-      throw new HttpResponse(400, 'Dados inválidos', result.error);
+      throw new HttpErrorResponse(400, 'Dados inválidos', result.error);
     }
 
     const { email, password }: z.infer<typeof userSchema> = request.body;
@@ -55,13 +55,13 @@ class UserController {
       }
     });
 
-    if (!user) throw new HttpResponse(400 ,'Usuário não encontrado', null);
+    if (!user) throw new HttpErrorResponse(400 ,'Usuário não encontrado', null);
       
     const comparePassword = await compare(password, user.password);
     
-    if (!comparePassword) throw new HttpResponse(400 ,'Dados do usuário incorretos', null);
+    if (!comparePassword) throw new HttpErrorResponse(400 ,'Dados do usuário incorretos', null);
       
-    if (!process.env.SECRET_KEY) throw new HttpResponse(500 ,'Erro interno', null);
+    if (!process.env.SECRET_KEY) throw new HttpErrorResponse(500 ,'Erro interno', null);
 
     const token = jwt.sign({ id: user.id }, process.env.SECRET_KEY, { expiresIn: '20s' });
 

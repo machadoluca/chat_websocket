@@ -1,7 +1,7 @@
 import { RequestHandler } from 'express';
 import { z } from 'zod';
 import { DataSource } from '../database/connection';
-import { HttpResponse } from '../utils/HttpResponse';
+import { HttpErrorResponse } from '../utils/HttpErrorResponse';
 import Room from '../domain/entities/Room';
 import RoomManager from '../domain/RoomManager';
 
@@ -27,7 +27,7 @@ class RoomController {
     const result = roomSchema.safeParse(request.body);
 
     if (!result.success) {
-      throw new HttpResponse(400, "Dados inválidos", result.error);
+      throw new HttpErrorResponse(400, "Dados inválidos", result.error);
     }
 
     const { name, hostId, userLimit }: z.infer<typeof roomSchema> = request.body;
@@ -51,10 +51,10 @@ class RoomController {
 
     const room = await this.repository.findOne({ where: { id }})
 
-    if(!room) throw new HttpResponse(400, 'Sala não encontrada', null);
+    if(!room) throw new HttpErrorResponse(400, 'Sala não encontrada', null);
 
     if(RoomManager.getRoomSize(room.id) === room.userLimit) {
-      throw new HttpResponse(400, 'Sala cheia', null);
+      throw new HttpErrorResponse(400, 'Sala cheia', null);
     }
 
     response.send({

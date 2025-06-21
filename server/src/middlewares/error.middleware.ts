@@ -1,7 +1,7 @@
 import { ErrorRequestHandler } from 'express';
-import { HttpResponse } from '../utils/HttpResponse';
+import { HttpErrorResponse } from '../utils/HttpErrorResponse';
 
-export const errorHandler: ErrorRequestHandler = (error: HttpResponse, request, response, next) => {
+export const errorHandler: ErrorRequestHandler = (error: HttpErrorResponse, request, response, next) => {
   response.status(error.statusCode).send({ message: error.message, data: error.data });
 };
 

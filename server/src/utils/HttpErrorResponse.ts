@@ -1,4 +1,4 @@
-export class HttpResponse {
+export class HttpErrorResponse {
   public statusCode: number
   public message: string
   public data: Object | null

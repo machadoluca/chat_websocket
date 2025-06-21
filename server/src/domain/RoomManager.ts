@@ -5,9 +5,7 @@ import Room from './entities/Room';
 class RoomManager {
   private roomConnections = new Map<string, Set<WebSocket>>();
 
-  public constructor() {
-    this.roomConnections.set('57c3248f-3a75-4b80-8a21-e5010c6c041c', new Set());
-  }
+  public constructor() {}
 
   public createRoom(id: string) {
     if (!this.roomConnections.has(id)) {

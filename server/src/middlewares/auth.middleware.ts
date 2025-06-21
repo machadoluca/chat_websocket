@@ -1,5 +1,5 @@
 import { RequestHandler } from 'express';
-import { HttpResponse } from '../utils/HttpResponse';
+import { HttpErrorResponse } from '../utils/HttpErrorResponse';
 import jwt from 'jsonwebtoken';
 
 
@@ -12,13 +12,13 @@ export const authHandler: RequestHandler = (request, response, next) => {
   }  
   const [, token] = authorization.split(' ');
 
-  if (!process.env.SECRET_KEY) throw new HttpResponse(500 ,'Erro interno', null);
+  if (!process.env.SECRET_KEY) throw new HttpErrorResponse(500 ,'Erro interno', null);
   
   try {
     const isValid = jwt.verify(token, process.env.SECRET_KEY);
     if (isValid) next();
   } catch (error: any) {
-    throw new HttpResponse(403, 'Token expirado', null);
+    throw new HttpErrorResponse(403, 'Token expirado', null);
   }
 
   
