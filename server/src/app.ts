@@ -1,3 +1,4 @@
+import cors from 'cors';
 import express from 'express';
 import usersRouter from './routes/users';
 import roomsRouter from './routes/rooms';
@@ -6,7 +7,9 @@ import { authHandler } from './middlewares/auth.middleware';
 
 const app = express();
 
+app.use(cors({ origin: 'http://localhost:5173' })); // Habilita CORS só pro front
 app.use(express.json());
+
 
 app.use('/rooms', authHandler, roomsRouter);
 app.use('/user', usersRouter);
