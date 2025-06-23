@@ -18,12 +18,12 @@ Wss.on('connection', ws => {
     const parseMessage: IWebSocketMessage = JSON.parse(message.toString())
 
     if (parseMessage.requestType == 'enter_room') {
-      RoomManager.addClient(parseMessage.roomId, ws)
+      RoomManager.addClient(parseMessage.roomId, ws);
       return;
     }
     
     if (parseMessage.requestType == 'leave_room') {
-      RoomManager.removeClient(parseMessage.roomId, ws)
+      RoomManager.removeClient(parseMessage.roomId, ws);
       ws.close();
       return;
     }
