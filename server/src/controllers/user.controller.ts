@@ -63,7 +63,7 @@ class UserController {
       
     if (!process.env.SECRET_KEY) throw new HttpErrorResponse(500 ,'Erro interno', null);
 
-    const token = jwt.sign({ id: user.id }, process.env.SECRET_KEY, { expiresIn: '4m' });
+    const token = jwt.sign({ id: user.id }, process.env.SECRET_KEY, { expiresIn: '1h' });
 
     response.send({message: 'sucesso',token,
     user: {

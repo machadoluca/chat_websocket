@@ -1,4 +1,4 @@
-import { Column, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, JoinColumn, ManyToOne,  PrimaryGeneratedColumn } from 'typeorm';
 import User from './User';
 
 @Entity()
@@ -12,7 +12,7 @@ class Room {
   @Column({ type: 'int', name: 'user_limit' })
   userLimit: number;
 
-  @OneToOne(() => User)
+  @ManyToOne(() => User)
   @JoinColumn({ name: 'host_id' })
   host: User
 }
