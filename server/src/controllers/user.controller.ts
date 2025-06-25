@@ -65,7 +65,14 @@ class UserController {
 
     const token = jwt.sign({ id: user.id }, process.env.SECRET_KEY, { expiresIn: '4m' });
 
-    response.send({ message: 'sucesso', token });
+    response.send({message: 'sucesso',token,
+    user: {
+        id: user.id,
+        name: user.name,
+        email: user.email
+    }
+});
+
   };
 
   public update: RequestHandler = async (request, response) => {

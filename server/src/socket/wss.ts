@@ -29,15 +29,20 @@ Wss.on('connection', ws => {
     }
     
     if (parseMessage.requestType == 'message') {
-      const users = RoomManager.getRoomUsers(parseMessage.roomId);
-      
-      for (const user of users) {
-        if (user !== ws && user.readyState === user.OPEN) {
-          user.send(`Message from ${parseMessage.userName}: ${parseMessage.data}`);
+        const users = RoomManager.getRoomUsers(parseMessage.roomId);
+
+        for (const user of users) {
+            if (user.readyState === user.OPEN) {
+                user.send(JSON.stringify({
+                    type: 'message',
+                    userName: parseMessage.userName,
+                    content: parseMessage.data
+                }));
+            }
         }
-      }
-      return;
+        return;
     }
+
   });
 
   ws.send('👋 Bem-vindo ao servidor WebSocket!');
