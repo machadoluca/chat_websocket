@@ -1,4 +1,4 @@
-import path, { parse } from 'node:path';
+import path from 'node:path';
 import { Worker } from 'node:worker_threads';
 import { WebSocketServer } from 'ws';
 import RoomManager from '../domain/RoomManager';
