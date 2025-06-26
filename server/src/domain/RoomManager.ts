@@ -7,6 +7,14 @@ class RoomManager {
 
   public constructor() {}
 
+  public async loadRooms() {
+    const persistRooms = await DataSource.getRepository(Room).find();
+    
+    for (const room of persistRooms) {
+      this.roomConnections.set(room.id, new Set());
+    }
+  }
+  
   public createRoom(id: string) {
     if (!this.roomConnections.has(id)) {
       this.roomConnections.set(id, new Set());
@@ -19,10 +27,6 @@ class RoomManager {
     if (!roomId) return null;
 
     this.roomConnections.get(roomId)?.add(client);
-    const connections = this.roomConnections.get(roomId);
-
-    if (!connections) return []
-    console.log('Usuários websocket na sala:', [...connections.values()].length);
     
     if (!this.roomConnections.get(roomId)?.has(client)) {
       console.log('Erro ao inserir usuário na sala em memória');
@@ -39,9 +43,7 @@ class RoomManager {
       if(this.roomConnections.get(roomId)?.size == 0) {
         this.roomConnections.delete(roomId);
         DataSource.getRepository(Room).delete(roomId)
-        console.log(this.roomConnections);
       }
-      console.log('Usuários websocket restantes na sala:', [...room.values()].length);
     }
   }
 

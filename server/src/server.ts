@@ -3,12 +3,14 @@ import { createServer } from 'node:http';
 import { Wss } from './socket/wss';
 import { DataSource } from './database/connection';
 import app from './app';
+import RoomManager from './domain/RoomManager';
 
 const server = createServer(app);
 
 DataSource.initialize()
   .then(() => {
     console.log('Database connected');
+    RoomManager.loadRooms();
 
     server.on('upgrade', (request, connection, head) => {
       Wss.handleUpgrade(request, connection, head, ws => {

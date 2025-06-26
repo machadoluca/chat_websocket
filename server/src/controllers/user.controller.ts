@@ -19,11 +19,10 @@ class UserController {
     const result = userSchema.safeParse(request.body);
 
     if (!result.success) {
-      throw new HttpErrorResponse(400, "Dados inválidos", result.error);
+      throw new HttpErrorResponse(400, 'Dados inválidos', result.error);
     }
 
     const { name, password, email }: z.infer<typeof userSchema> = request.body;
-
 
     const hashPassword = await hash(password, 10);
     const user = await this.repository.save({
@@ -34,7 +33,7 @@ class UserController {
 
     response.send({ message: 'Usuário criado com sucesso', user });
   };
-  
+
   public login: RequestHandler = async (request, response) => {
     const userSchema = z.object({
       email: z.string().email(),
@@ -51,28 +50,33 @@ class UserController {
 
     const user = await this.repository.findOne({
       where: {
-        email,
+        email
       }
     });
 
-    if (!user) throw new HttpErrorResponse(400 ,'Usuário não encontrado', null);
-      
+    if (!user) throw new HttpErrorResponse(400, 'Usuário não encontrado', null);
+
     const comparePassword = await compare(password, user.password);
-    
-    if (!comparePassword) throw new HttpErrorResponse(400 ,'Dados do usuário incorretos', null);
-      
-    if (!process.env.SECRET_KEY) throw new HttpErrorResponse(500 ,'Erro interno', null);
 
-    const token = jwt.sign({ id: user.id }, process.env.SECRET_KEY, { expiresIn: '1h' });
+    if (!comparePassword)
+      throw new HttpErrorResponse(400, 'Dados do usuário incorretos', null);
 
-    response.send({message: 'sucesso',token,
-    user: {
+    if (!process.env.SECRET_KEY)
+      throw new HttpErrorResponse(500, 'Erro interno', null);
+
+    const token = jwt.sign({ id: user.id }, process.env.SECRET_KEY, {
+      expiresIn: '1h'
+    });
+
+    response.send({
+      message: 'sucesso',
+      token,
+      user: {
         id: user.id,
         name: user.name,
         email: user.email
-    }
-});
-
+      }
+    });
   };
 
   public update: RequestHandler = async (request, response) => {
