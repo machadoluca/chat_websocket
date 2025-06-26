@@ -1,5 +1,8 @@
+import path, { parse } from 'node:path';
+import { Worker } from 'node:worker_threads';
 import { WebSocketServer } from 'ws';
 import RoomManager from '../domain/RoomManager';
+import { fileURLToPath } from 'node:url';
 
 interface IWebSocketMessage {
   requestType: string;
@@ -11,39 +14,41 @@ interface IWebSocketMessage {
 const Wss = new WebSocketServer({ noServer: true });
 
 Wss.on('connection', ws => {
-  // TODO: Create node_worker for threads
-
   console.log('new websocket connection!');
+
+  const worker = new Worker(
+    path.resolve(path.dirname(fileURLToPath(import.meta.url)), 'ws.worker.js')
+  );
 
   ws.on('message', message => {
     const parseMessage: IWebSocketMessage = JSON.parse(message.toString());
+    worker.postMessage(parseMessage);
+  });
 
-    if (parseMessage.requestType == 'enter_room') {
-      RoomManager.addClient(parseMessage.roomId, ws);
-      return;
+  worker.on('message', msg => {
+    if (msg.action === 'enter_room') {
+      RoomManager.addClient(msg.roomId, ws);
     }
 
-    if (parseMessage.requestType == 'leave_room') {
-      RoomManager.removeClient(parseMessage.roomId, ws);
+    if (msg.action === 'leave_room') {
+      RoomManager.removeClient(msg.roomId, ws);
       ws.close();
-      return;
+      worker.terminate();
     }
 
-    if (parseMessage.requestType == 'message') {
-      const users = RoomManager.getRoomUsers(parseMessage.roomId);
-
+    if (msg.action === 'broadcast') {
+      const users = RoomManager.getRoomUsers(msg.roomId);
       for (const user of users) {
-        if (user.readyState === user.OPEN) {
+        if (user !== ws && user.readyState === user.OPEN) {
           user.send(
             JSON.stringify({
               type: 'message',
-              userName: parseMessage.userName,
-              content: parseMessage.data
+              userName: msg.userName,
+              content: msg.content
             })
           );
         }
       }
-      return;
     }
   });
 });

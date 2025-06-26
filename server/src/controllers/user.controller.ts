@@ -79,6 +79,7 @@ class UserController {
     });
   };
 
+  // TODO: implement user update fields (optional)
   public update: RequestHandler = async (request, response) => {
     response.send({ message: 'user info updated' });
   };

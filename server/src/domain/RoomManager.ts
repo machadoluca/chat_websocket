@@ -13,6 +13,7 @@ class RoomManager {
     for (const room of persistRooms) {
       this.roomConnections.set(room.id, new Set());
     }
+    console.log(this.roomConnections);
   }
   
   public createRoom(id: string) {
@@ -21,6 +22,7 @@ class RoomManager {
     }
   }
 
+  // TODO: implement remove room where all users disconnect from server
   public removeRoom(name: string) {}
 
   public addClient(roomId: string, client: WebSocket) {
@@ -42,7 +44,7 @@ class RoomManager {
 
       if(this.roomConnections.get(roomId)?.size == 0) {
         this.roomConnections.delete(roomId);
-        DataSource.getRepository(Room).delete(roomId)
+        DataSource.getRepository(Room).delete(roomId);
       }
     }
   }
