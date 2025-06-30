@@ -5,11 +5,9 @@ export const AppDataSource = new DataSource({
   host: 'localhost',
   port: 5432,
   username: 'postgres',
-  password: 'postgres',
+  password: '12345678',    
   database: 'wschat',
   synchronize: false,
   logging: false,
-  entities: ['src/domain/entities/**/*.ts'],
-  migrations: ['src/database/migrations/*.ts'],
-  subscribers: [],
+  ...
 });

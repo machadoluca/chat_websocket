@@ -1,7 +1,12 @@
 import { ErrorRequestHandler } from 'express';
 import { HttpErrorResponse } from '../utils/HttpErrorResponse';
 
-export const errorHandler: ErrorRequestHandler = (error: HttpErrorResponse, request, response, next) => {
-  response.status(error.statusCode).send({ message: error.message, data: error.data });
-};
+export const errorHandler: ErrorRequestHandler = (error: any, request, response, next) => {
+  const statusCode = error instanceof HttpErrorResponse && error.statusCode ? error.statusCode : 500;
+  const message = error.message || 'Erro interno do servidor';
+  const data = error.data || null;
 
+  console.error('Erro tratado:', error);
+
+  response.status(statusCode).send({ message, data });
+};
