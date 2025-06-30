@@ -9,5 +9,5 @@ export const AppDataSource = new DataSource({
   database: 'wschat',
   synchronize: false,
   logging: false,
-  ...
+  
 });
