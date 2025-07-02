@@ -1,3 +1,4 @@
+// Utilitário para executar erros nos controllers
 export class HttpErrorResponse {
   public statusCode: number
   public message: string

@@ -1,5 +1,6 @@
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
+// entidade de usuário (tabela no banco)
 @Entity()
 class User {
   @PrimaryGeneratedColumn('uuid')

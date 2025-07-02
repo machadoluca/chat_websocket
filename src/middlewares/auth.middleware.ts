@@ -2,7 +2,7 @@ import { RequestHandler } from 'express';
 import { HttpErrorResponse } from '../utils/HttpErrorResponse';
 import jwt from 'jsonwebtoken';
 
-
+// middleware para rotas autenticadas
 export const authHandler: RequestHandler = (request, response, next) => {
   const { authorization } = request.headers;
   
@@ -21,6 +21,4 @@ export const authHandler: RequestHandler = (request, response, next) => {
   catch (error: any) {
     throw new HttpErrorResponse(403, 'Token expirado', null);
   }
-
-  
 };

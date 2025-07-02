@@ -4,10 +4,12 @@ import { DataSource } from '../database/connection';
 import { HttpErrorResponse } from '../utils/HttpErrorResponse';
 import Room from '../domain/entities/Room';
 import RoomManager from '../domain/RoomManager';
+import User from '../domain/entities/User';
 
 class RoomController {
   private readonly repository = DataSource.getRepository(Room);
 
+  // lista as salas criadas no banco  
   public list: RequestHandler = async (request, response) => {
     const rooms = await this.repository.find();
 
@@ -17,6 +19,7 @@ class RoomController {
     });
   };
 
+  // cria uma sala no banco
   public create: RequestHandler = async (request, response) => {
     const roomSchema = z.object({
       name: z.string(),
@@ -32,10 +35,20 @@ class RoomController {
 
     const { name, hostId, userLimit }: z.infer<typeof roomSchema> = request.body;
 
+    const persistedUser = await DataSource.getRepository(User).findOne({
+      where: {
+        id: hostId
+      }
+    });
+
+    if (!persistedUser) {
+      throw new HttpErrorResponse(400, 'Usuário não encontrado', null);
+    }
+
     const createdRoom = await this.repository.save({
       name,
       userLimit,
-      host: { id: hostId }
+      host: { id: persistedUser.id }
     });
     
     RoomManager.createRoom(createdRoom.id);
@@ -46,6 +59,7 @@ class RoomController {
     });
   };
 
+  // entra em uma sala criada
   public join: RequestHandler = async (request, response) => {
     const { id } = request.params;
 

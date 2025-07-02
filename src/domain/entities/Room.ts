@@ -1,6 +1,7 @@
 import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
-import User from '../entities/User.ts';
+import User from '../entities/User';
 
+// entidade de sala (tabela no banco)
 @Entity()
 class Room {
   @PrimaryGeneratedColumn('uuid')

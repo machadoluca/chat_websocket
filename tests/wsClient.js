@@ -16,7 +16,7 @@ ws.on('open', () => {
   ws.send(
     JSON.stringify({
       requestType: 'enter_room',
-      roomId: '06a03cf6-5939-44c2-95e1-11d5350db7ff'
+      roomId: '960760da-7519-402f-ba9f-232d7518836d'
     })
   );
 
@@ -25,7 +25,7 @@ ws.on('open', () => {
         JSON.stringify({ 
           requestType: 'message', 
           userName: 'Lucas',
-          roomId: '06a03cf6-5939-44c2-95e1-11d5350db7ff',
+          roomId: '960760da-7519-402f-ba9f-232d7518836d',
           data: messages[Math.round(Math.random() * 3)] })
       ),
     2000
@@ -35,10 +35,10 @@ ws.on('open', () => {
     clearInterval(interval);
     ws.send(JSON.stringify({
       requestType: 'leave_room',
-      roomId: '06a03cf6-5939-44c2-95e1-11d5350db7ff'
+      roomId: '960760da-7519-402f-ba9f-232d7518836d'
     }))
     // ws.close();
-  }, 20000)
+  }, 10000)
 });
 
 ws.on('message', data => {

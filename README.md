@@ -1,8 +1,12 @@
-# Trabalho Chat
-  >Desevolver um chat multiusuário usando sockets, com arquitetura cliente-servidor e uso de threads. O chat deve permitir que vários usuários conversem em tempo real, com todas as mensagens passando primeiro pelo servidor, que as envia aos demais usuários.
+# Instruções para instalação e execução
 
-## integrantes:
+- Necessário Node.js versão recomendada 20.x
+- Rode uma instância do postgres localmente em sua máquina com o seguinte database `dev_wschat` 
 
- - Davi Duarte
- - Lucas Machado
- - Wendell Soares
+- Para instalar as dependências do projeto use `npm install` no terminal
+- Para executar o projeto, abra o terminal e execute `npm run dev`
+
+<br>
+Feito por Davi Duarte,
+Lucas Machado,
+Wendell Soares
