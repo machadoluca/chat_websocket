@@ -4,7 +4,7 @@ export const AppDevDataSource = new DataSource({
   type: 'postgres',
   host: 'localhost',
   port: 5432,
-  username: 'postgres',
+  username: process.env.DB_USERNAME,
   password: process.env.DB_PASSWORD,
   database: 'dev_wschat',
   synchronize: true,

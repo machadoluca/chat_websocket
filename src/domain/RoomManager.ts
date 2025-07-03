@@ -17,7 +17,6 @@ class RoomManager {
     for (const room of persistRooms) {
       this.roomConnections.set(room.id, new Set());
     }
-    console.log(this.roomConnections);
   }
   
   public createRoom(id: string) {
@@ -30,8 +29,7 @@ class RoomManager {
     if (!roomId) return null;
 
     this.roomConnections.get(roomId)?.add(client);
-    console.log(this.roomConnections);
-    
+        
     if (!this.roomConnections.get(roomId)?.has(client)) {
       console.log('Erro ao inserir usuário na sala em memória');
     }
